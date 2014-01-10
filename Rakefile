@@ -13,15 +13,23 @@ namespace :lint do
     end
   end
 
+  task :dawn do
+
+    Dir.glob('gems/*/*.yml') do |path|
+      advisory = YAML.load_file(path)
+
+      if advisory['cve']
+        puts "CVE #{cve} NOT in dawn v#{Codesake::Dawn::VERSION} knowledge base" unless Codesake::Dawn::KnowledgeBase.new.find(cve)
+      end
+    end
+
+  end
   task :cve do
     Dir.glob('gems/*/*.yml') do |path|
       advisory = YAML.load_file(path)
 
       unless advisory['cve']
         puts "Missing CVE: #{path}"
-      else
-        cve = "CVE-"+advisory['cve'].gsub(" ", "-")
-        puts "CVE #{cve} NOT in dawn v#{Codesake::Dawn::VERSION} knowledge base" unless Codesake::Dawn::KnowledgeBase.new.find(cve)
       end
     end
   end
