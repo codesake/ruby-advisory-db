@@ -1,4 +1,5 @@
 require 'yaml'
+require 'codesake-dawn'
 
 namespace :lint do
   begin
@@ -18,9 +19,13 @@ namespace :lint do
 
       unless advisory['cve']
         puts "Missing CVE: #{path}"
+      else
+        cve = "CVE-"+advisory['cve'].gsub(" ", "-")
+        puts "CVE #{cve} NOT in dawn v#{Codesake::Dawn::VERSION} knowledge base" unless Codesake::Dawn::KnowledgeBase.new.find(cve)
       end
     end
   end
+
 end
 
 task :lint    => ['lint:yaml', 'lint:cve']
