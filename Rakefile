@@ -19,6 +19,7 @@ namespace :lint do
       advisory = YAML.load_file(path)
 
       if advisory['cve']
+        cve = "CVE-"+advisory['cve']
         puts "CVE #{cve} NOT in dawn v#{Codesake::Dawn::VERSION} knowledge base" unless Codesake::Dawn::KnowledgeBase.new.find(cve)
       end
     end
